@@ -8,7 +8,6 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
-	"strings"
 )
 
 var (
@@ -92,7 +91,7 @@ func (s *Service) AddContent(content *models.Content, contentType string, genre 
 	content.ContentTypeID = typeOfContent[contentType]
 	content.GenreId = genreOfContent[genre]
 
-	// Sendind struct to DB
+	// Sending struct to DB
 	err := s.Repository.AddContentToDB(content)
 	if err != nil {
 		return err
@@ -119,19 +118,6 @@ func (s *Service) ValidateContentAndLinks(content *models.Content, links *models
 		return ErrInvalidData
 	}
 	if len(content.Description) > 300 || len(content.Description) < 5 {
-		return ErrInvalidData
-	}
-
-	if strings.HasPrefix(links.Alfa, "http://") || strings.HasPrefix(links.Alfa, "https://") == false {
-		return ErrInvalidData
-	}
-	if strings.HasPrefix(links.Okko, "http://") || strings.HasPrefix(links.Okko, "https://") == false {
-		return ErrInvalidData
-	}
-	if strings.HasPrefix(links.Kinopoisk, "http://") || strings.HasPrefix(links.Kinopoisk, "https://") == false {
-		return ErrInvalidData
-	}
-	if strings.HasPrefix(links.Wink, "http://") || strings.HasPrefix(links.Wink, "https://") == false {
 		return ErrInvalidData
 	}
 

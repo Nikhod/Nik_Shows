@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/gorilla/mux"
+	"log"
 	"net/http"
 )
 
@@ -63,6 +64,7 @@ func (h *Handlers) AddContentWithLinks(w http.ResponseWriter, r *http.Request) {
 		helper.ResetContentServerError(w, err, h.Logger)
 		return
 	}
+	log.Println("Validate test")
 
 	vars := mux.Vars(r)
 	contentType, genre := vars["content_type"], vars["genre"]
@@ -70,13 +72,14 @@ func (h *Handlers) AddContentWithLinks(w http.ResponseWriter, r *http.Request) {
 	err = h.Service.AddContent(&content.Content, contentType, genre)
 	if err != nil {
 		helper.InternalServerError(w, err, h.Logger)
-		err = helper.ResponseAnswer(w, "Maybe this content has already exsisted...")
+		err = helper.ResponseAnswer(w, "Maybe this content has already existed...")
 		if err != nil {
 			helper.InternalServerError(w, err, h.Logger)
 			return
 		}
 		return
 	}
+	log.Println("Test Add Contennt")
 
 	err = h.Service.AddLinks(&content.Links, content.Content.Name)
 	if err != nil {
@@ -99,6 +102,7 @@ func (h *Handlers) AddContentWithLinks(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
+	log.Println("Test Links")
 
 	err = helper.ResponseAnswer(w, "Content Added Successfuly!")
 	if err != nil {
