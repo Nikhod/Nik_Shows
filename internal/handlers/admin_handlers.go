@@ -79,7 +79,6 @@ func (h *Handlers) AddContentWithLinks(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	log.Println("Test Add Contennt")
 
 	err = h.Service.AddLinks(&content.Links, content.Content.Name)
 	if err != nil {
@@ -102,7 +101,6 @@ func (h *Handlers) AddContentWithLinks(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	log.Println("Test Links")
 
 	err = helper.ResponseAnswer(w, "Content Added Successfuly!")
 	if err != nil {
