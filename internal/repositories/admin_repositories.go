@@ -207,4 +207,23 @@ values (?, ?);`
 	return nil
 }
 
-// todo EditDescription
+func (r *Repository) CheckContentForExistence(contentID int) error {
+	var checkContent int
+	query := `select genre_id
+from content
+where id = ?;`
+	gorm := r.Db.Raw(query, contentID).
+		Scan(&checkContent)
+	err := gorm.Error
+	if err != nil {
+		return err
+	}
+
+	affected := gorm.RowsAffected
+	if affected == 0 {
+		err = errors.New("This Content doesn't exist!")
+		return err
+	}
+
+	return nil
+}

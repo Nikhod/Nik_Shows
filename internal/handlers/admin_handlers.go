@@ -19,6 +19,21 @@ func (h *Handlers) AddImageToContent(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	strContentID := vars["content_id"]
 
+	err = h.Service.CheckContentForExistence(strContentID)
+	if err != nil {
+		checkError := errors.New("this Content doesn't exist")
+		if errors.As(err, &checkError) {
+			helper.NotFoundErr(w, checkError, h.Logger)
+			err = helper.ResponseAnswer(w, "This Content doesn't exist!")
+			if err != nil {
+				return
+			}
+			return
+		}
+		helper.InternalServerError(w, err, h.Logger)
+		return
+	}
+
 	err = h.Service.ValidateImage(header.Size)
 	if err != nil {
 		helper.BadRequest(w, err, h.Logger)
@@ -82,8 +97,8 @@ func (h *Handlers) AddContentWithLinks(w http.ResponseWriter, r *http.Request) {
 
 	err = h.Service.AddLinks(&content.Links, content.Content.Name)
 	if err != nil {
-		chekErr := errors.New("Content updated!")
-		if errors.As(err, &chekErr) {
+		checkErr := errors.New("content updated")
+		if errors.As(err, &checkErr) {
 			helper.ResetContentServerError(w, err, h.Logger)
 			err = helper.ResponseAnswer(w, "Content updated!")
 			if err != nil {
@@ -114,7 +129,22 @@ func (h *Handlers) DeleteContent(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	strContentID := vars["content_id"]
 
-	err := h.Service.DeleteContent(strContentID)
+	err := h.Service.CheckContentForExistence(strContentID)
+	if err != nil {
+		checkError := errors.New("this Content doesn't exist")
+		if errors.As(err, &checkError) {
+			helper.NotFoundErr(w, checkError, h.Logger)
+			err = helper.ResponseAnswer(w, "This Content doesn't exist!")
+			if err != nil {
+				return
+			}
+			return
+		}
+		helper.InternalServerError(w, err, h.Logger)
+		return
+	}
+
+	err = h.Service.DeleteContent(strContentID)
 	if err != nil {
 		helper.InternalServerError(w, err, h.Logger)
 		return
@@ -168,7 +198,22 @@ func (h *Handlers) DeactivateLink(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	strContentID := vars["content_id"]
 
-	err := h.Service.DeactivateLink(strContentID)
+	err := h.Service.CheckContentForExistence(strContentID)
+	if err != nil {
+		checkError := errors.New("this Content doesn't exist")
+		if errors.As(err, &checkError) {
+			helper.NotFoundErr(w, checkError, h.Logger)
+			err = helper.ResponseAnswer(w, "This Content doesn't exist!")
+			if err != nil {
+				return
+			}
+			return
+		}
+		helper.InternalServerError(w, err, h.Logger)
+		return
+	}
+
+	err = h.Service.DeactivateLink(strContentID)
 	if err != nil {
 		helper.InternalServerError(w, err, h.Logger)
 		return
@@ -186,10 +231,25 @@ func (h *Handlers) AddRecommendation(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	strContentID := vars["content_id"]
 
-	err := h.Service.AddRecomendation(strContentID)
+	err := h.Service.CheckContentForExistence(strContentID)
 	if err != nil {
-		chekErr := errors.New("There is no Content by this name!")
-		if errors.As(err, &chekErr) {
+		checkError := errors.New("this Content doesn't exist")
+		if errors.As(err, &checkError) {
+			helper.NotFoundErr(w, checkError, h.Logger)
+			err = helper.ResponseAnswer(w, "This Content doesn't exist!")
+			if err != nil {
+				return
+			}
+			return
+		}
+		helper.InternalServerError(w, err, h.Logger)
+		return
+	}
+
+	err = h.Service.AddRecomendation(strContentID)
+	if err != nil {
+		checkErr := errors.New("there is no Content by this name")
+		if errors.As(err, &checkErr) {
 			helper.NotFoundErr(w, err, h.Logger)
 			err = helper.ResponseAnswer(w, "There is no Content by this name!")
 			if err != nil {
@@ -215,7 +275,22 @@ func (h *Handlers) DeleteFromRecommendation(w http.ResponseWriter, r *http.Reque
 	vars := mux.Vars(r)
 	strContentID := vars["content_id"]
 
-	err := h.Service.DeleteFromRecomendation(strContentID)
+	err := h.Service.CheckContentForExistence(strContentID)
+	if err != nil {
+		checkError := errors.New("this Content doesn't exist")
+		if errors.As(err, &checkError) {
+			helper.NotFoundErr(w, checkError, h.Logger)
+			err = helper.ResponseAnswer(w, "This Content doesn't exist!")
+			if err != nil {
+				return
+			}
+			return
+		}
+		helper.InternalServerError(w, err, h.Logger)
+		return
+	}
+
+	err = h.Service.DeleteFromRecomendation(strContentID)
 	if err != nil {
 		helper.InternalServerError(w, err, h.Logger)
 		return

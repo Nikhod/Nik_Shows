@@ -211,3 +211,17 @@ func (s *Service) SendMessage(message *models.Notifications) error {
 
 	return nil
 }
+
+func (s *Service) CheckContentForExistence(strContentID string) error {
+	contentID, err := strconv.Atoi(strContentID)
+	if err != nil {
+		return err
+	}
+
+	err = s.Repository.CheckContentForExistence(contentID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

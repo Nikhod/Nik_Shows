@@ -411,6 +411,21 @@ func (h *Handlers) AddToMyPlaylists(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	strContentID, playlist := vars["content_id"], vars["playlist"]
 
+	err = h.Service.CheckContentForExistence(strContentID)
+	if err != nil {
+		checkError := errors.New("this Content doesn't exist")
+		if errors.As(err, &checkError) {
+			helper.NotFoundErr(w, checkError, h.Logger)
+			err = helper.ResponseAnswer(w, "This Content doesn't exist!")
+			if err != nil {
+				return
+			}
+			return
+		}
+		helper.InternalServerError(w, err, h.Logger)
+		return
+	}
+
 	err = h.Service.AddToMyPlaylist(userID, strContentID, playlist)
 	if err != nil {
 		helper.InternalServerError(w, err, h.Logger)
@@ -481,6 +496,21 @@ func (h *Handlers) DeleteContentFromPlaylist(w http.ResponseWriter, r *http.Requ
 	vars := mux.Vars(r)
 	strContentID, playlist := vars["content_id"], vars["playlist"]
 
+	err = h.Service.CheckContentForExistence(strContentID)
+	if err != nil {
+		checkError := errors.New("this Content doesn't exist")
+		if errors.As(err, &checkError) {
+			helper.NotFoundErr(w, checkError, h.Logger)
+			err = helper.ResponseAnswer(w, "This Content doesn't exist!")
+			if err != nil {
+				return
+			}
+			return
+		}
+		helper.InternalServerError(w, err, h.Logger)
+		return
+	}
+
 	err = h.Service.DeleteContentFromPlaylist(userID, strContentID, playlist)
 	if err != nil {
 		helper.InternalServerError(w, err, h.Logger)
@@ -510,9 +540,24 @@ func (h *Handlers) ViewConcreteContentByID(w http.ResponseWriter, r *http.Reques
 	}
 
 	vars := mux.Vars(r)
-	strContent := vars["content_id"]
+	strContentID := vars["content_id"]
 
-	contentID, err := strconv.Atoi(strContent)
+	err = h.Service.CheckContentForExistence(strContentID)
+	if err != nil {
+		checkError := errors.New("this Content doesn't exist")
+		if errors.As(err, &checkError) {
+			helper.NotFoundErr(w, checkError, h.Logger)
+			err = helper.ResponseAnswer(w, "This Content doesn't exist!")
+			if err != nil {
+				return
+			}
+			return
+		}
+		helper.InternalServerError(w, err, h.Logger)
+		return
+	}
+
+	contentID, err := strconv.Atoi(strContentID)
 	if err != nil {
 		helper.InternalServerError(w, err, h.Logger)
 		return
@@ -547,6 +592,21 @@ func (h *Handlers) ViewConcreteContentByID(w http.ResponseWriter, r *http.Reques
 func (h *Handlers) GetLinks(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	strContentID := vars["content_id"]
+
+	err := h.Service.CheckContentForExistence(strContentID)
+	if err != nil {
+		checkError := errors.New("this Content doesn't exist")
+		if errors.As(err, &checkError) {
+			helper.NotFoundErr(w, checkError, h.Logger)
+			err = helper.ResponseAnswer(w, "This Content doesn't exist!")
+			if err != nil {
+				return
+			}
+			return
+		}
+		helper.InternalServerError(w, err, h.Logger)
+		return
+	}
 
 	contentID, err := strconv.Atoi(strContentID)
 	if err != nil {
@@ -605,6 +665,21 @@ func (h *Handlers) GetContentByFilter(w http.ResponseWriter, r *http.Request) {
 func (h *Handlers) GetImage(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	strContentID := vars["content_id"]
+
+	err := h.Service.CheckContentForExistence(strContentID)
+	if err != nil {
+		checkError := errors.New("this Content doesn't exist")
+		if errors.As(err, &checkError) {
+			helper.NotFoundErr(w, checkError, h.Logger)
+			err = helper.ResponseAnswer(w, "This Content doesn't exist!")
+			if err != nil {
+				return
+			}
+			return
+		}
+		helper.InternalServerError(w, err, h.Logger)
+		return
+	}
 
 	image, err := h.Service.GetImage(strContentID)
 	if err != nil {
