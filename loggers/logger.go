@@ -9,7 +9,7 @@ func InitLogger() (*zap.Logger, error) {
 	config := zap.NewProductionConfig()
 	config.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
 
-	config.OutputPaths = []string{"./loggers/logg.log"}
-
+	config.OutputPaths = []string{"./loggers/logger.log"}
+	
 	return config.Build()
 }
